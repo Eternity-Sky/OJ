@@ -1,0 +1,93 @@
+<%- include('layout') %>
+
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">题库</h3>
+            <div class="d-flex">
+                <div class="input-group me-2">
+                    <input type="text" class="form-control" id="search" placeholder="搜索题目...">
+                    <button class="btn btn-outline-secondary" type="button">搜索</button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-primary dropdown-toggle" data-bs-toggle="dropdown">
+                        难度
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" data-difficulty="all">全部</a></li>
+                        <li><a class="dropdown-item" href="#" data-difficulty="简单">简单</a></li>
+                        <li><a class="dropdown-item" href="#" data-difficulty="中等">中等</a></li>
+                        <li><a class="dropdown-item" href="#" data-difficulty="困难">困难</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>状态</th>
+                        <th>题号</th>
+                        <th>标题</th>
+                        <th>难度</th>
+                        <th>通过率</th>
+                        <th>提交次数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% problems.forEach(function(problem, index) { %>
+                        <tr>
+                            <td>
+                                <% if (locals.user && user.solvedProblems.includes(problem._id)) { %>
+                                    <span class="text-success">✓</span>
+                                <% } %>
+                            </td>
+                            <td><%= index + 1 %></td>
+                            <td><a href="/problems/<%= problem._id %>"><%= problem.title %></a></td>
+                            <td>
+                                <span class="badge bg-<%= problem.difficulty === '简单' ? 'success' : (problem.difficulty === '中等' ? 'warning' : 'danger') %>">
+                                    <%= problem.difficulty %>
+                                </span>
+                            </td>
+                            <td><%= problem.acceptanceRate %>%</td>
+                            <td><%= problem.totalSubmissions %></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 搜索功能
+    document.getElementById('search').addEventListener('input', function(e) {
+        const searchText = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
+        
+        rows.forEach(row => {
+            const title = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+            row.style.display = title.includes(searchText) ? '' : 'none';
+        });
+    });
+
+    // 难度筛选
+    document.querySelectorAll('[data-difficulty]').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const difficulty = this.dataset.difficulty;
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                if (difficulty === 'all') {
+                    row.style.display = '';
+                } else {
+                    const rowDifficulty = row.querySelector('td:nth-child(4)').textContent.trim();
+                    row.style.display = rowDifficulty === difficulty ? '' : 'none';
+                }
+            });
+        });
+    });
+</script>

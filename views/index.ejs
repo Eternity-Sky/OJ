@@ -1,0 +1,41 @@
+<%- include('layout') %>
+
+<div class="jumbotron text-center">
+    <h1 class="display-4">欢迎来到 Online Judge</h1>
+    <p class="lead">这是一个在线编程评测平台，你可以在这里练习编程题目，提高编程能力。</p>
+    <hr class="my-4">
+    <p>开始你的编程之旅吧！</p>
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="/problems" role="button">浏览题目</a>
+        <% if (!locals.user) { %>
+            <a class="btn btn-success btn-lg" href="/register" role="button">立即注册</a>
+        <% } %>
+    </p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">丰富的题库</h5>
+                <p class="card-text">包含各种难度的编程题目，从入门到进阶应有尽有。</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">实时评测</h5>
+                <p class="card-text">提交代码后立即获得评测结果，帮助你快速改进。</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">排行榜</h5>
+                <p class="card-text">查看解题排行榜，与其他用户一较高下。</p>
+            </div>
+        </div>
+    </div>
+</div>
