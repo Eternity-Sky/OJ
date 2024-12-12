@@ -5,6 +5,7 @@ const { addUser, validateUser } = require('./models/User');
 const { addProblem, getProblems } = require('./models/Problem');
 const { addSubmission } = require('./models/Submission');
 const { addBadge, getUserBadges } = require('./models/Badge');
+const session = require('express-session');
 
 const app = express();
 app.use(express.json());
@@ -17,9 +18,18 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', './views');
 
+// 设置会话中间件
+app.use(session({
+    secret: 'your_secret_key', // 替换为你的密钥
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // 在开发环境中设置为 false
+}));
+
 // 路由
 app.get('/', (req, res) => {
-    res.render('index'); // 渲染首页
+    const username = req.session.user; // 获取会话中的用户名
+    res.render('index', { username }); // 将用户名传递给视图
 });
 
 // 用户注册页面
@@ -44,7 +54,13 @@ app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const isValid = await validateUser(username, password);
     if (isValid) {
-        res.send('登录成功');
+        req.session.user = username; // 保存用户信息到会话
+        res.send(`
+            <script>
+                alert('登录成功');
+                window.location.href = '/';
+            </script>
+        `);
     } else {
         res.send('用户名或密码错误');
     }
