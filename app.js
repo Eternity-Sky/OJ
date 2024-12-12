@@ -1,3 +1,5 @@
+require('dotenv').config(); // 加载环境变量
+
 const express = require('express');
 const { addUser, validateUser } = require('./models/User');
 const { addProblem, getProblems } = require('./models/Problem');
@@ -9,11 +11,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 设置静态文件目录
-app.use(express.static('public')); // 这行代码确保可以访问 public 目录下的文件
+app.use(express.static('public'));
 
 // 设置视图引擎为 EJS
 app.set('view engine', 'ejs');
-app.set('views', './views'); // 设置视图文件夹
+app.set('views', './views');
 
 // 路由
 app.get('/', (req, res) => {
@@ -65,4 +67,9 @@ app.get('/user/:id/badges', (req, res) => {
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('服务器内部错误');
+});
+
+const PORT = process.env.PORT || 3000; // 使用环境变量中的端口
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
