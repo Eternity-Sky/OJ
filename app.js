@@ -44,6 +44,12 @@ app.post('/submit', (req, res) => {
     res.send('提交成功');
 });
 
+// 获取题目列表
+app.get('/api/problems', (req, res) => {
+    const problems = getProblems(); // 从模型中获取题目
+    res.json(problems);
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
