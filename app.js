@@ -22,7 +22,12 @@ app.get('/', (req, res) => {
     res.render('index'); // 渲染首页
 });
 
-// 用户注册
+// 用户注册页面
+app.get('/register', (req, res) => {
+    res.render('register'); // 确保有对应的视图文件
+});
+
+// 用户注册处理
 app.post('/register', async (req, res) => {
     const { username, password, email } = req.body;
     await addUser(username, password, email);
