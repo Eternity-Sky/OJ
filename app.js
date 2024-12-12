@@ -7,6 +7,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// 设置视图引擎为 EJS
+app.set('view engine', 'ejs');
+app.set('views', './views'); // 设置视图文件夹
+
 // 路由
 app.get('/', (req, res) => {
     res.render('index'); // 渲染首页
