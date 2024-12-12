@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员界面</title>
+</head>
+<body>
+    <h1>颁发徽章</h1>
+    <form action="/admin/give-badge" method="POST">
+        <label for="userId">用户ID:</label>
+        <input type="text" id="userId" name="userId" required>
+        <br>
+        <label for="badgeName">徽章名称:</label>
+        <input type="text" id="badgeName" name="badgeName" required>
+        <br>
+        <button type="submit">颁发徽章</button>
+    </form>
+</body>
+</html> 

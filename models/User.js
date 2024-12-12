@@ -7,7 +7,7 @@ function hashPassword(password) {
 
 async function addUser(username, password, email) {
     const hashedPassword = hashPassword(password); // 哈希密码
-    const user = { username, password: hashedPassword, email };
+    const user = { username, password: hashedPassword, email, badges: [] };
     users.push(user);
 }
 
@@ -23,4 +23,4 @@ function getUsers() {
     return users;
 }
 
-module.exports = { addUser, validateUser, getUsers }; 
+module.exports = { addUser, validateUser, getUsers };

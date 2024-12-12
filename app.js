@@ -2,6 +2,7 @@ const express = require('express');
 const { addUser, validateUser } = require('./models/User');
 const { addProblem, getProblems } = require('./models/Problem');
 const { addSubmission } = require('./models/Submission');
+const { addBadge, getUserBadges } = require('./models/Badge');
 
 const app = express();
 app.use(express.json());
@@ -45,6 +46,20 @@ app.get('/problems', (req, res) => {
 // 获取比赛列表
 app.get('/contests', (req, res) => {
     res.render('contests'); // 确保有对应的视图文件
+});
+
+// 颁发徽章
+app.post('/admin/give-badge', (req, res) => {
+    const { userId, badgeName } = req.body;
+    addBadge(userId, badgeName);
+    res.send('徽章已颁发');
+});
+
+// 获取用户徽章
+app.get('/user/:id/badges', (req, res) => {
+    const userId = req.params.id;
+    const userBadges = getUserBadges(userId);
+    res.json(userBadges);
 });
 
 app.use((err, req, res, next) => {
