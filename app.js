@@ -34,7 +34,12 @@ app.post('/register', async (req, res) => {
     res.send('用户注册成功');
 });
 
-// 用户登录
+// 用户登录页面
+app.get('/login', (req, res) => {
+    res.render('login'); // 确保有对应的视图文件
+});
+
+// 用户登录处理
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const isValid = await validateUser(username, password);
