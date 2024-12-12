@@ -19,4 +19,35 @@ app.get('/', (req, res) => {
     res.render('index'); // 渲染首页
 });
 
-// 其他路由...
+// 用户注册
+app.post('/register', async (req, res) => {
+    const { username, password, email } = req.body;
+    await addUser(username, password, email);
+    res.send('用户注册成功');
+});
+
+// 用户登录
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+    const isValid = await validateUser(username, password);
+    if (isValid) {
+        res.send('登录成功');
+    } else {
+        res.send('用户名或密码错误');
+    }
+});
+
+// 获取题目列表
+app.get('/problems', (req, res) => {
+    res.render('problems'); // 确保有对应的视图文件
+});
+
+// 获取比赛列表
+app.get('/contests', (req, res) => {
+    res.render('contests'); // 确保有对应的视图文件
+});
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('服务器内部错误');
+});
