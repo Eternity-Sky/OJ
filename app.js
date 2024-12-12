@@ -6,6 +6,7 @@ const { addProblem, getProblems } = require('./models/Problem');
 const { addSubmission } = require('./models/Submission');
 const { addBadge, getUserBadges } = require('./models/Badge');
 const session = require('express-session');
+const mongoose = require('mongoose');
 
 const app = express();
 app.use(express.json());
@@ -99,3 +100,7 @@ const PORT = process.env.PORT || 3000; // 使用环境变量中的端口
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
