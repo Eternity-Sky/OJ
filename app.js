@@ -54,6 +54,12 @@ app.get('/api/problems', (req, res) => {
     res.json(problems);
 });
 
+// 获取比赛列表
+app.get('/api/contests', (req, res) => {
+    const contests = getContests(); // 从模型中获取比赛
+    res.json(contests);
+});
+
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('服务器内部错误');
