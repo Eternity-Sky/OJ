@@ -1,6 +1,6 @@
 const express = require('express');
 const { addUser, validateUser } = require('./models/User');
-const { addProblem } = require('./models/Problem');
+const { addProblem, getProblems } = require('./models/Problem');
 const { addSubmission } = require('./models/Submission');
 
 const app = express();
@@ -48,6 +48,11 @@ app.post('/submit', (req, res) => {
 app.get('/api/problems', (req, res) => {
     const problems = getProblems(); // 从模型中获取题目
     res.json(problems);
+});
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('服务器内部错误');
 });
 
 const PORT = process.env.PORT || 3000;
