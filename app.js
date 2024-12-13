@@ -22,7 +22,7 @@ app.set('views', './views');
 
 // 设置会话中间件
 app.use(session({
-    secret: 'your_secret_key', // 替换为你的密钥
+    secret: process.env.SESSION_SECRET, // 使用环境变量中的密钥
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }), // 使用 MongoDB 存储会话
