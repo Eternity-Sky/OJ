@@ -83,6 +83,12 @@ app.get('/contests', (req, res) => {
     res.render('contests'); // 确保有对应的视图文件
 });
 
+// 获取比赛列表的 API 路由
+app.get('/api/contests', async (req, res) => {
+    const contests = await getContests(); // 假设你有一个获取比赛的函数
+    res.json(contests);
+});
+
 // 颁发徽章
 app.post('/admin/give-badge', (req, res) => {
     const { userId, badgeName } = req.body;
