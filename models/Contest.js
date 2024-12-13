@@ -1,12 +1,15 @@
-let contests = []; // 存储比赛的数组
+const { readData, writeData } = require('./FileStorage');
 
 function addContest(title, description) {
+    const data = readData();
     const contest = { title, description };
-    contests.push(contest);
+    data.contests.push(contest);
+    writeData(data);
 }
 
 function getContests() {
-    return contests; // 返回所有比赛
+    const data = readData();
+    return data.contests;
 }
 
 module.exports = { addContest, getContests }; 

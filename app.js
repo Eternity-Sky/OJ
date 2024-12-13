@@ -2,7 +2,9 @@ require('dotenv').config(); // 加载环境变量
 
 const express = require('express');
 const session = require('express-session');
-const mysql = require('mysql2/promise'); // 使用 mysql2 驱动
+const { addUser, validateUser } = require('./models/User'); // 保持用户模型
+const { addContest, getContests } = require('./models/Contest'); // 保持比赛模型
+const FileStorage = require('./models/FileStorage'); // 引入文件存储模块
 
 const app = express();
 app.use(express.json());
@@ -23,15 +25,6 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-// 创建 MySQL 连接
-const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME
-});
-
 // 路由
 app.get('/', (req, res) => {
     const username = req.session.user;
@@ -46,7 +39,7 @@ app.get('/register', (req, res) => {
 // 用户注册处理
 app.post('/register', async (req, res) => {
     const { username, password, email } = req.body;
-    const [rows] = await db.query('INSERT INTO users (username, password, email) VALUES (?, ?, ?)', [username, password, email]);
+    addUser(username, password, email); // 使用文件存储
     res.send('用户注册成功');
 });
 
@@ -58,8 +51,8 @@ app.get('/login', (req, res) => {
 // 用户登录处理
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    const [rows] = await db.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password]);
-    if (rows.length > 0) {
+    const isValid = validateUser(username, password); // 使用文件存储
+    if (isValid) {
         req.session.user = username;
         res.send(`
             <script>
@@ -78,14 +71,9 @@ app.get('/problems', (req, res) => {
     res.render('problems', { problems }); // 将问题传递给视图
 });
 
-// 获取比赛列表
-app.get('/contests', (req, res) => {
-    res.render('contests'); // 确保有对应的视图文件
-});
-
 // 获取比赛列表的 API 路由
-app.get('/api/contests', async (req, res) => {
-    const contests = getContests(); // 从内存中获取比赛
+app.get('/api/contests', (req, res) => {
+    const contests = getContests(); // 从文件存储获取比赛
     res.json(contests);
 });
 
@@ -112,5 +100,3 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
-const { addContest, getContests } = require('./models/Contest'); // 引入比赛模型
