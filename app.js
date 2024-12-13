@@ -5,6 +5,7 @@ const session = require('express-session');
 const { addUser, validateUser } = require('./models/User'); // 保持用户模型
 const { addContest, getContests } = require('./models/Contest'); // 保持比赛模型
 const FileStorage = require('./models/FileStorage'); // 引入文件存储模块
+const axios = require('axios');
 
 const app = express();
 app.use(express.json());
@@ -75,6 +76,23 @@ app.get('/problems', (req, res) => {
 app.get('/api/contests', (req, res) => {
     const contests = getContests(); // 从文件存储获取比赛
     res.json(contests);
+});
+
+// 获取题目列表的 API 路由
+app.get('/api/problems', async (req, res) => {
+    try {
+        const response = await axios.get('https://leetcode.com/api/problems/all/');
+        const problems = response.data.stat_status_pairs.map(problem => ({
+            id: problem.stat.question_id,
+            title: problem.stat.question__title,
+            difficulty: problem.difficulty.level,
+            link: `https://leetcode.com/problems/${problem.stat.question__title_slug}/`
+        }));
+        res.json(problems);
+    } catch (error) {
+        console.error('Error fetching problems:', error);
+        res.status(500).send('无法获取题目列表');
+    }
 });
 
 // 颁发徽章
