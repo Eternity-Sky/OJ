@@ -85,7 +85,7 @@ app.get('/contests', (req, res) => {
 
 // 获取比赛列表的 API 路由
 app.get('/api/contests', async (req, res) => {
-    const contests = await getContests(); // 假设你有一个获取比赛的函数
+    const contests = getContests(); // 从内存中获取比赛
     res.json(contests);
 });
 
@@ -112,3 +112,5 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+const { addContest, getContests } = require('./models/Contest'); // 引入比赛模型
