@@ -7,6 +7,7 @@ const { addSubmission } = require('./models/Submission');
 const { addBadge, getUserBadges } = require('./models/Badge');
 const session = require('express-session');
 const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use(session({
     secret: 'your_secret_key', // 替换为你的密钥
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL }), // 使用 MongoDB 存储会话
     cookie: { secure: false } // 在开发环境中设置为 false
 }));
 
